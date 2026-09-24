@@ -15,21 +15,21 @@ from datetime import datetime
 
 # Import our modules with error handling
 try:
-    from data_fetcher import BulletproofDataFetcher
-    from model_trainer import BulletproofModelTrainer
+    from data_fetcher import NiftyDataFetcher
+    from model_trainer import StockModelTrainer
     MODULES_AVAILABLE = True
 except ImportError as e:
     print(f"❌ Module import error: {e}")
     MODULES_AVAILABLE = False
 
-class BulletproofPredictionSystem:
+class NiftyPredictionSystem:
     def __init__(self):
         if not MODULES_AVAILABLE:
             print("❌ Required modules not available")
             return
 
-        self.data_fetcher = BulletproofDataFetcher()
-        self.model_trainer = BulletproofModelTrainer()
+        self.data_fetcher = NiftyDataFetcher()
+        self.model_trainer = StockModelTrainer()
         self.predictions = {}
         self.market_data = None
         self.is_initialized = False
@@ -308,14 +308,14 @@ class BulletproofPredictionSystem:
 # Test function
 def run_system_test():
     """Test the complete system"""
-    print("🧪 TESTING BULLETPROOF PREDICTION SYSTEM")
+    print("🧪 TESTING NIFTY 50 PREDICTION SYSTEM")
     print("=" * 70)
 
     if not MODULES_AVAILABLE:
         print("❌ Required modules not available")
         return
 
-    system = BulletproofPredictionSystem()
+    system = NiftyPredictionSystem()
 
     print("\n🔄 Testing system initialization...")
     success = system.initialize_system(100)  # Smaller dataset for testing
