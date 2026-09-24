@@ -32,7 +32,7 @@ import traceback
 
 # Import prediction system
 try:
-    from predictor import NiftyPredictionSystem
+    from predictor import BulletproofPredictionSystem
     SYSTEM_AVAILABLE = True
 except ImportError as e:
     st.error(f"❌ Prediction System Import Error: {e}")
