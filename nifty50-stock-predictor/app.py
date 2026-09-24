@@ -32,7 +32,7 @@ import traceback
 
 # Import prediction system
 try:
-    from predictor import BulletproofPredictionSystem
+    from predictor import NiftyPredictionSystem
     SYSTEM_AVAILABLE = True
 except ImportError as e:
     st.error(f"❌ Prediction System Import Error: {e}")
@@ -41,7 +41,7 @@ except ImportError as e:
 
 # Page configuration
 st.set_page_config(
-    page_title="NIFTY 50 Predictor - Fixed",
+    page_title="NIFTY 50 Stock Predictor",
     page_icon="📈",
     layout="wide"
 )
@@ -79,7 +79,7 @@ def main():
 
     # Header
     st.title("🏛️ NIFTY 50 Stock Price Predictor")
-    st.markdown("**Fixed Version - Python 3.12 Compatible**")
+    st.markdown("**Machine Learning Dashboard for NIFTY 50 Analysis**")
 
     # Layout
     create_sidebar()
@@ -90,30 +90,15 @@ def main():
         show_main_dashboard()
 
 def show_error_screen():
-    """Show error screen when system unavailable"""
-    st.error("🚨 System Error - Required Components Missing")
-
+    """Show setup guidance when the prediction system is unavailable."""
+    st.error("⚠️ Required project components are unavailable")
     st.markdown("""
-    **To fix this issue:**
+    **Setup checklist:**
 
-    1. **Run the emergency launcher:**
-       - Double-click `EMERGENCY_LAUNCHER.py`
-       - OR run: `python EMERGENCY_LAUNCHER.py`
-
-    2. **Manual installation:**
-       ```
-       pip install --upgrade pip setuptools wheel
-       pip install --only-binary=all streamlit pandas numpy yfinance scikit-learn plotly
-       ```
-
-    3. **Check file integrity:**
-       - Ensure all Python files are in the same folder
-       - Re-extract the ZIP if files are missing
-
-    4. **System compatibility:**
-       - Python 3.8+ required
-       - Windows 10+ recommended
-       - Internet connection for live data
+    1. Install dependencies with `python -m pip install -r requirements.txt`.
+    2. Keep the project Python files in the same directory.
+    3. Run the app with `python -m streamlit run app.py`.
+    4. Check your internet connection if live market data is unavailable.
     """)
 
 def create_sidebar():
@@ -176,7 +161,7 @@ def initialize_system():
             add_log("📦 Creating system components...")
             progress_bar.progress(20)
 
-            system = BulletproofPredictionSystem()
+            system = NiftyPredictionSystem()
 
             # Check if system creation was successful
             if not hasattr(system, 'data_fetcher'):
@@ -224,7 +209,7 @@ def initialize_system():
                 **Initialization Failed. Try:**
                 1. Check internet connection
                 2. Run as Administrator
-                3. Use EMERGENCY_LAUNCHER.py
+                3. Check the installation requirements
                 4. Manual setup via command line
                 """)
 
@@ -242,7 +227,7 @@ def generate_predictions():
     try:
         add_log("🔮 Generating predictions...")
 
-        with st.spinner("🔮 Generating 7-day predictions..."):
+        with st.spinner("🔮 Generating 7-session model estimates..."):
             predictions = st.session_state.prediction_system.generate_predictions()
 
             if predictions:
@@ -268,7 +253,7 @@ def show_welcome_screen():
 
     with col1:
         st.markdown("### 👋 Welcome to NIFTY 50 Predictor!")
-        st.markdown("**Fixed Version - All Python 3.12 Issues Resolved**")
+        st.markdown("**Analyze market data, model estimates, and prediction ranges in one dashboard.**")
 
         st.markdown("""
         **🎯 This System Provides:**
@@ -279,13 +264,6 @@ def show_welcome_screen():
         - Professional risk assessment and trading signals
         - Interactive charts and comprehensive market insights
 
-        **🔧 Python 3.12 Fixes Applied:**
-        - ✅ Resolved setuptools/pip compatibility issues
-        - ✅ Fixed `pkgutil.ImpImporter` error
-        - ✅ Bypassed corrupted package installations
-        - ✅ Enhanced error handling and recovery
-        - ✅ Pre-compiled wheel installations only
-        - ✅ Fallback modes for missing packages
         """)
 
     with col2:
@@ -300,10 +278,9 @@ def show_welcome_screen():
         5. 📊 Explore detailed analysis
 
         **If Issues Occur:**
-        - Check Activity Log in sidebar
-        - Try EMERGENCY_LAUNCHER.py
-        - Run as Administrator
-        - Check internet connection
+        - Check the Activity Log in the sidebar
+        - Verify the packages in `requirements.txt`
+        - Check your internet connection
         """)
 
         # System diagnostics
@@ -428,7 +405,7 @@ def show_historical_chart():
 
 def show_predictions_section():
     """Display prediction results"""
-    st.markdown("### 🔮 7-Day Predictions with High/Low Analysis")
+    st.markdown("### 🔮 7-Session Model Estimates & Prediction Range")
 
     try:
         predictions = st.session_state.current_predictions
@@ -440,8 +417,8 @@ def show_predictions_section():
                 'Model': model,
                 'Current': f"₹{pred['current_price']:.2f}",
                 'Base Prediction': f"₹{pred['base_prediction']:.2f}",
-                '📈 Highest (7d)': f"₹{pred['highest_7d']:.2f}",
-                '📉 Lowest (7d)': f"₹{pred['lowest_7d']:.2f}",
+                '📈 Upper Range': f"₹{pred['highest_7d']:.2f}",
+                '📉 Lower Range': f"₹{pred['lowest_7d']:.2f}",
                 'Change %': f"{pred['base_change_pct']:+.2f}%",
                 'Trend': f"{pred['trend']} ({pred['trend_strength']})"
             })
@@ -464,7 +441,7 @@ def create_prediction_chart(predictions):
         for model in predictions.keys():
             pred = predictions[model]
 
-            scenarios = ['Current', 'Low (7d)', 'Base', 'High (7d)']
+            scenarios = ['Current', 'Lower Range', 'Base', 'Upper Range']
             values = [
                 pred['current_price'],
                 pred['lowest_7d'],
@@ -483,7 +460,7 @@ def create_prediction_chart(predictions):
             ))
 
         fig.update_layout(
-            title="7-Day Prediction Scenarios",
+            title="Prediction Range Scenarios",
             xaxis_title="Scenarios",
             yaxis_title="Price (₹)",
             height=500,
@@ -594,11 +571,14 @@ def show_model_performance():
         if performance:
             perf_data = []
             for model, metrics in performance.items():
+                def format_metric(value, decimals=2):
+                    return 'N/A' if value is None or not np.isfinite(value) else f'{value:.{decimals}f}'
+
                 perf_data.append({
                     'Model': model,
-                    'MAE (₹)': f"{metrics['MAE']:.2f}",
-                    'RMSE (₹)': f"{metrics['RMSE']:.2f}",
-                    'R² Score': f"{metrics['R2']:.4f}",
+                    'MAE (₹)': format_metric(metrics.get('MAE')),
+                    'RMSE (₹)': format_metric(metrics.get('RMSE')),
+                    'R² Score': format_metric(metrics.get('R2'), 4),
                     'Status': '✅ Trained'
                 })
 
