@@ -29,14 +29,14 @@ except ImportError:
 from datetime import datetime, timedelta
 import json
 
-class BulletproofDataFetcher:
+class NiftyDataFetcher:
     def __init__(self):
         self.symbol = "^NSEI"
         self.data = None
         self.fallback_mode = not YF_AVAILABLE
 
     def fetch_data(self, period_days=365):
-        """Bulletproof data fetching with multiple fallbacks"""
+        """Robust data fetching with multiple fallbacks"""
         try:
             print(f"📊 Fetching NIFTY 50 data ({period_days} days)...")
 
@@ -210,7 +210,7 @@ class BulletproofDataFetcher:
             return pd.Series(50, index=prices.index)
 
     def prepare_training_data(self, prediction_days=7):
-        """Prepare ML training data with bulletproof validation"""
+        """Prepare ML training data with robust validation"""
         if self.data is None or len(self.data) < 50:
             print("❌ Insufficient data for training")
             return None, None, None
@@ -311,8 +311,8 @@ class BulletproofDataFetcher:
 
 # Test the data fetcher
 if __name__ == "__main__":
-    print("🧪 Testing Bulletproof Data Fetcher...")
-    fetcher = BulletproofDataFetcher()
+    print("🧪 Testing Robust Data Fetcher...")
+    fetcher = NiftyDataFetcher()
     data = fetcher.fetch_data(100)
 
     if data is not None:
