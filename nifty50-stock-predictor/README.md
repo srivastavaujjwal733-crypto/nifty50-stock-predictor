@@ -2,6 +2,10 @@
 
 A machine learning-based web application for analyzing NIFTY 50 market data and generating short-term price predictions through an interactive Streamlit dashboard.
 
+## 🚀 Live Demo
+
+[Open NIFTY 50 Prediction Dashboard](https://nifty50-stock-predictor-fjt8ddzxpyhedegedx9jod.streamlit.app/)
+
 ## Overview
 
 This project uses historical NIFTY 50 market data, technical indicators, and machine learning models to provide market analysis and short-term price predictions.
