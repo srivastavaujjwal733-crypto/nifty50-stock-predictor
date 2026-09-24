@@ -77,6 +77,7 @@ Trend & Risk Analysis
 Streamlit Dashboard
 ```
 ## Project Structure
+```text
 nifty50-stock-predictor/
 │
 ├── app.py
@@ -85,16 +86,20 @@ nifty50-stock-predictor/
 ├── predictor.py
 ├── requirements.txt
 └── README.md
+```
 
 ## File Description
+```
 app.py — Streamlit dashboard and user interface
 data_fetcher.py — Market data collection, cleaning, and feature engineering
 model_trainer.py — Machine learning model training and evaluation
 predictor.py — Prediction and market analysis workflow
 requirements.txt — Python dependencies
 README.md — Project documentation
+```
 
 ## Technologies Used
+```
 Python
 Pandas
 NumPy
@@ -103,17 +108,18 @@ yfinance
 Streamlit
 Matplotlib
 Plotly
-
+```
 ## Running the Project Locally
 
 Install the required dependencies:
+```
 
 pip install -r requirements.txt
-
+```
 Run the Streamlit application:
-
+```
 python -m streamlit run app.py
-
+```
 The application will open in your browser.
 
 ## Data Source
