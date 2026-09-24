@@ -22,7 +22,7 @@ except ImportError:
     SKLEARN_AVAILABLE = False
     print("⚠️ scikit-learn not available - using simple models")
 
-class BulletproofModelTrainer:
+class StockModelTrainer:
     def __init__(self):
         self.models = {}
         self.scalers = {}
@@ -231,13 +231,13 @@ class BulletproofModelTrainer:
             return {
                 'MAE': mae,
                 'RMSE': rmse,
-                'R2': max(0, min(1, r2)),  # Clip R2 to reasonable range
+                'R2': r2,
                 'pred_std': pred_std
             }
 
         except Exception as e:
             print(f"❌ Metrics calculation error: {e}")
-            return {'MAE': 100, 'RMSE': 150, 'R2': 0.0, 'pred_std': 50}
+            return {'MAE': np.nan, 'RMSE': np.nan, 'R2': np.nan, 'pred_std': np.nan}
 
     def _validate_predictions(self, predictions):
         """Validate model predictions"""
@@ -350,7 +350,7 @@ class BulletproofModelTrainer:
 
 # Test the model trainer
 if __name__ == "__main__":
-    print("🧪 Testing Bulletproof Model Trainer...")
+    print("🧪 Testing Robust Model Trainer...")
 
     # Create dummy data
     np.random.seed(42)
@@ -362,7 +362,7 @@ if __name__ == "__main__":
     )
     y = pd.Series(np.random.randn(n_samples) * 100 + 25000)
 
-    trainer = BulletproofModelTrainer()
+    trainer = StockModelTrainer()
     success = trainer.train_models(X, y)
 
     if success:
